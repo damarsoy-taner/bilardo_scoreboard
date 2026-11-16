@@ -8,7 +8,25 @@ let flapCleanupTimers = {};
 let flapSoundTimers = {};
 let config = { mode: 'standard', standardTarget: 40, maxInnings: 45, targets: { 1: 40, 2: 40 }, shotActive: true };
 const CIRC = 471.2;
-let lastIn = 0;
+const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+let lastActionTime = 0;
+let turnLockUntil = 0;
+
+function guardTouchEvent(e) {
+    if (e) {
+        if (e.stopPropagation) e.stopPropagation();
+        if (isTouchDevice && e.type === 'click') {
+            return false;
+        }
+        if (e.type === 'touchend' || e.type === 'touchstart') {
+            if (e.preventDefault) e.preventDefault();
+        }
+    }
+    const now = Date.now();
+    if (now - lastActionTime < 450) return false;
+    lastActionTime = now;
+    return true;
+}
 
 // Ses Sentezleyici
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -269,7 +287,8 @@ function saveSnapshot() {
     });
     if (historyStack.length > MAX_HISTORY) historyStack.shift();
 }
-function undoLastAction() {
+function undoLastAction(e) {
+    if (!guardTouchEvent(e)) return;
     if (historyStack.length === 0 || isPaused) return;
     const prev = historyStack.pop();
     const hadScoreDecrease = isPenaltyMode && prev.isPenaltyMode
@@ -307,13 +326,13 @@ function startPenaltyMode() {
     speakText('Maç berabere, ... Penaltı atışları başlıyor', { pitch: 1.16, rate: 0.78 });
     updateUI();
 }
-function handleInteraction(p, type) {
-    const now = Date.now();
-    if (now - lastIn < 300) return; lastIn = now;
+function handleInteraction(p, type, e) {
+    if (!guardTouchEvent(e)) return;
     if (isPaused) return;
     if (type === 'add') {
         if (turn !== p) changeTurn();
         else {
+            if (Date.now() < turnLockUntil) return;
             saveSnapshot();
             if (isPenaltyMode) {
                 penaltyScores[p]++; currentRun++;
@@ -337,6 +356,7 @@ function handleInteraction(p, type) {
             }
         }
     } else if (type === 'sub' && turn === p && currentRun > 0) {
+        if (Date.now() < turnLockUntil) return;
         saveSnapshot();
         if (isPenaltyMode) penaltyScores[p]--;
         else scores[p]--;
@@ -376,12 +396,14 @@ function endMatch(msg) {
     `;
     document.getElementById('end-match-overlay').style.display = 'flex';
 }
-function changeTurn(skipSnapshot = false, isEqualizingStart = false) {
+function changeTurn(skipSnapshot = false, isEqualizingStart = false, e = null) {
+    if (e && !guardTouchEvent(e)) return;
     if (!skipSnapshot) saveSnapshot();
     if (isPenaltyMode) {
         if (turn === 1) {
             speakText(`Beyaz, ... ${numberToTurkish(currentRun)}`, { pitch: 1.10, rate: 0.76 });
             turn = 2;
+            turnLockUntil = Date.now() + 500;
             currentRun = 0; currentShot = config.shotTime;
             shotClockPaused = false;
             updatePauseBtn();
@@ -398,6 +420,7 @@ function changeTurn(skipSnapshot = false, isEqualizingStart = false) {
                 penaltyRound++;
                 penaltyScores = { 1: 0, 2: 0 };
                 turn = 1;
+                turnLockUntil = Date.now() + 500;
                 currentRun = 0; currentShot = config.shotTime;
                 shotClockPaused = false;
                 updatePauseBtn();
@@ -427,6 +450,7 @@ function changeTurn(skipSnapshot = false, isEqualizingStart = false) {
     }
     commitRun(turn, currentRun);
     turn = (turn === 1) ? 2 : 1;
+    turnLockUntil = Date.now() + 500;
     if (turn === 1) totalInnings++;
     currentRun = 0; currentShot = config.shotTime;
     shotClockPaused = false;
@@ -528,13 +552,18 @@ function updateClockUI() {
     circle.style.strokeDashoffset = offset;
     circle.style.stroke = currentShot <= config.warnTime ? "red" : "#00ff00";
 }
-function togglePause() { shotClockPaused = !shotClockPaused; updatePauseBtn(); }
+function togglePause(e) {
+    if (!guardTouchEvent(e)) return;
+    shotClockPaused = !shotClockPaused;
+    updatePauseBtn();
+}
 function updatePauseBtn() {
     const btn = document.getElementById('shot-clock-pause-btn');
     btn.innerText = shotClockPaused ? "DEVAM" : "PAUSE";
     btn.style.background = shotClockPaused ? "rgba(255,0,0,0.3)" : "rgba(0,0,0,0.5)";
 }
-function useTimeout(p) {
+function useTimeout(p, e) {
+    if (!guardTouchEvent(e)) return;
     if (turn === p && config.timeouts[p] > 0) {
         saveSnapshot();
         config.timeouts[p]--; currentShot += 30;

@@ -74,16 +74,16 @@
 <div class="main-stage">
     <div class="score-card-container">
         <div class="score-card p1-card active-turn" id="card-1">
-            <div class="touch-area area-add" onclick="handleInteraction(1, 'add')" ontouchend="handleInteraction(1, 'add')"></div>
+            <div class="touch-area area-add" onclick="handleInteraction(1, 'add', event)" ontouchend="handleInteraction(1, 'add', event)"></div>
             <div class="score-val" id="s1">0</div>
-            <div class="touch-area area-sub" onclick="handleInteraction(1, 'sub')" ontouchend="handleInteraction(1, 'sub')"></div>
+            <div class="touch-area area-sub" onclick="handleInteraction(1, 'sub', event)" ontouchend="handleInteraction(1, 'sub', event)"></div>
         </div>
-        <button id="to-btn-1" class="btn-timeout" onclick="useTimeout(1)">+</button>
+        <button id="to-btn-1" class="btn-timeout" onclick="useTimeout(1, event)" ontouchend="useTimeout(1, event)">+</button>
     </div>
     <div class="center-hub">
         <div id="clock-box" class="shot-clock-wrapper">
-            <button id="shot-clock-pause-btn" onclick="togglePause()">PAUSE</button>
-            <div class="shot-clock-container" onclick="togglePause()">
+            <button id="shot-clock-pause-btn" onclick="togglePause(event)" ontouchend="togglePause(event)">PAUSE</button>
+            <div class="shot-clock-container" onclick="togglePause(event)" ontouchend="togglePause(event)">
                 <svg class="shot-clock-svg" width="150" height="150" viewBox="0 0 170 170">
                     <circle class="shot-clock-bg" cx="85" cy="85" r="75"></circle>
                     <circle id="progress-circle" class="shot-clock-progress" cx="85" cy="85" r="75" stroke-dasharray="471.2" stroke-dashoffset="0"></circle>
@@ -92,14 +92,14 @@
             </div>
         </div>
         <div class="center-stat"><div class="center-stat-label">SERİ</div><span id="run-display" class="run-val">0</span></div>
-        <div onclick="changeTurn()" class="center-stat" style="cursor: pointer;"><span id="inn-display" class="inn-val">1</span><div class="center-stat-label">ISTAKA</div></div>
+        <div onclick="changeTurn(false, false, event)" ontouchend="changeTurn(false, false, event)" class="center-stat" style="cursor: pointer;"><span id="inn-display" class="inn-val">1</span><div class="center-stat-label">ISTAKA</div></div>
     </div>
     <div class="score-card-container">
-        <button id="to-btn-2" class="btn-timeout" onclick="useTimeout(2)">+</button>
+        <button id="to-btn-2" class="btn-timeout" onclick="useTimeout(2, event)" ontouchend="useTimeout(2, event)">+</button>
         <div class="score-card p2-card inactive-turn" id="card-2">
-            <div class="touch-area area-add" onclick="handleInteraction(2, 'add')" ontouchend="handleInteraction(2, 'add')"></div>
+            <div class="touch-area area-add" onclick="handleInteraction(2, 'add', event)" ontouchend="handleInteraction(2, 'add', event)"></div>
             <div class="score-val" id="s2">0</div>
-            <div class="touch-area area-sub" onclick="handleInteraction(2, 'sub')" ontouchend="handleInteraction(2, 'sub')"></div>
+            <div class="touch-area area-sub" onclick="handleInteraction(2, 'sub', event)" ontouchend="handleInteraction(2, 'sub', event)"></div>
         </div>
     </div>
 </div>
@@ -115,7 +115,7 @@
         </div>
     </div>
     <div class="bottom-controls">
-        <button id="btn-undo" class="bottom-ctrl-btn" onclick="undoLastAction()" disabled>↶ GERİ AL</button>
+        <button id="btn-undo" class="bottom-ctrl-btn" onclick="undoLastAction(event)" ontouchend="undoLastAction(event)" disabled>↶ GERİ AL</button>
         <button class="bottom-ctrl-btn" onclick="resetMatch()">YENİ MAÇ</button>
     </div>
     <div class="stat-group">
