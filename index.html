@@ -52,6 +52,13 @@
                 <div class="setup-group" style="flex:1"><span class="setup-label">UYARI SESİ (Sn)</span><input type="number" id="input-warn-time" class="setup-input" value="10"></div>
             </div>
         </div>
+        <div class="setup-card">
+            <div class="setup-title">SKOR GÖRÜNÜMÜ</div>
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+                <div id="btn-view-flap" class="toggle-btn active" onclick="setViewMode('flap')">Mekanik Yaprak (Split-Flap)</div>
+                <div id="btn-view-seg" class="toggle-btn" onclick="setViewMode('segment')">Mekanik 7-Segment</div>
+            </div>
+        </div>
     </div>
     <button class="btn-start-big" onclick="startMatch()">MAÇI BAŞLAT</button>
 </div>

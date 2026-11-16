@@ -93,6 +93,17 @@ body { background-color: var(--bg-color); color: white; font-family: 'Segoe UI',
     100% { opacity: 0; }
 }
 
+/* MEKANİK 7-SEGMENT (VANE / FLIP-SEGMENT) */
+.seg-digit { width: 156px; height: 320px; padding: 10px 8px; border-radius: 14px; position: relative; display: -webkit-inline-flex; display: inline-flex; -webkit-flex-shrink: 0; flex-shrink: 0; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; margin-right: 4px; background: #141619; border: 2px solid #26292e; box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.7); }
+.seg-digit:last-child { margin-right: 0; }
+.seg-digit.seg-sm { width: 34px; height: 58px; padding: 3px; border-radius: 6px; margin-right: 3px; border-width: 1px; }
+.seg-digit.seg-sm:last-child { margin-right: 0; }
+.seg-svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.seg-vane { fill: rgba(255, 255, 255, 0.06); opacity: 0.92; transform-box: fill-box; -webkit-transform-origin: center; transform-origin: center; -webkit-transform: scaleY(0.72); transform: scaleY(0.72); -webkit-transition: -webkit-transform 180ms cubic-bezier(0.4, 0, 0.2, 1), fill 180ms ease, opacity 180ms ease; transition: transform 180ms cubic-bezier(0.4, 0, 0.2, 1), fill 180ms ease, opacity 180ms ease; }
+.seg-vane.on { opacity: 1; -webkit-transform: scaleY(1); transform: scaleY(1); -webkit-filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.55)); filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.55)); }
+.p1-card .seg-vane.on, #inn-display .seg-vane.on { fill: #F2F0E6; }
+.p2-card .seg-vane.on, #run-display .seg-vane.on { fill: #F5C518; }
+
 .btn-timeout { width: 52px; height: 130px; -webkit-flex-shrink: 0; flex-shrink: 0; -webkit-align-self: center; align-self: center; background: #ff4444; border: none; border-radius: 14px; color: white; font-size: 36px; font-weight: bold; z-index: 200; cursor: pointer; margin: 0 6px; }
 
 /* ORTA PANEL */
@@ -134,6 +145,8 @@ body { background-color: var(--bg-color); color: white; font-family: 'Segoe UI',
     .display-name, .target-badge { font-size: 36px; }
     .score-card { height: 328px; max-height: 328px; padding: 4px 6px; }
     .flap-digit { font-size: 288px; padding: 4px 6px; margin-right: 4px; }
+    .seg-digit { width: 144px; height: 292px; padding: 8px 6px; margin-right: 4px; }
+    .seg-digit.seg-sm { width: 32px; height: 54px; padding: 3px; margin-right: 3px; }
     .btn-timeout { width: 48px; height: 124px; font-size: 32px; margin: 0 5px; }
     .center-hub { height: 100%; padding: 8px 0; }
     .center-stat { margin: 18px 0; }

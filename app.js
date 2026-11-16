@@ -6,7 +6,8 @@ const MAX_HISTORY = 50;
 let prevRenderedScores = { s1: null, s2: null };
 let flapCleanupTimers = {};
 let flapSoundTimers = {};
-let config = { mode: 'standard', standardTarget: 40, maxInnings: 45, targets: { 1: 40, 2: 40 }, shotActive: true };
+let config = { mode: 'standard', standardTarget: 40, maxInnings: 45, targets: { 1: 40, 2: 40 }, shotActive: true, viewMode: 'flap' };
+const VIEW_MODE_KEY = 'bilardo_gorunum_modu';
 const CIRC = 471.2;
 const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 let lastActionTime = 0;
@@ -191,6 +192,20 @@ function setStandardTarget(val) {
     document.getElementById('btn-target-30').classList.toggle('active', val === 30);
     document.getElementById('btn-target-40').classList.toggle('active', val === 40);
 }
+function setViewMode(mode) {
+    config.viewMode = mode === 'segment' ? 'segment' : 'flap';
+    try { localStorage.setItem(VIEW_MODE_KEY, config.viewMode); } catch (e) {}
+    const flapBtn = document.getElementById('btn-view-flap');
+    const segBtn = document.getElementById('btn-view-seg');
+    if (flapBtn) flapBtn.classList.toggle('active', config.viewMode === 'flap');
+    if (segBtn) segBtn.classList.toggle('active', config.viewMode === 'segment');
+    prevRenderedScores = { s1: null, s2: null };
+}
+(function initViewMode() {
+    let saved = 'flap';
+    try { saved = localStorage.getItem(VIEW_MODE_KEY) || 'flap'; } catch (e) {}
+    setViewMode(saved);
+})();
 function toggleShotActive() {
     config.shotActive = !config.shotActive;
     const btn = document.getElementById('btn-shot-toggle');
@@ -522,16 +537,83 @@ function renderSplitFlap(elId, value) {
         }, 720);
     }
 }
+const SEG_MAP = {
+    '0': [1,1,1,1,1,1,0],
+    '1': [0,1,1,0,0,0,0],
+    '2': [1,1,0,1,1,0,1],
+    '3': [1,1,1,1,0,0,1],
+    '4': [0,1,1,0,0,1,1],
+    '5': [1,0,1,1,0,1,1],
+    '6': [1,0,1,1,1,1,1],
+    '7': [1,1,1,0,0,0,0],
+    '8': [1,1,1,1,1,1,1],
+    '9': [1,1,1,1,0,1,1]
+};
+const SEG_PATHS = [
+    'M 20 12 L 80 12 L 72 26 L 28 26 Z',
+    'M 83 15 L 91 23 L 88 83 L 76 77 Z',
+    'M 88 97 L 91 157 L 83 165 L 76 103 Z',
+    'M 28 154 L 72 154 L 80 168 L 20 168 Z',
+    'M 12 97 L 24 103 L 17 165 L 9 157 Z',
+    'M 17 15 L 24 77 L 12 83 L 9 23 Z',
+    'M 18 90 L 26 82 L 74 82 L 82 90 L 74 98 L 26 98 Z'
+];
+function buildSegDigitHTML(digitChar, isSmall) {
+    const segs = SEG_MAP[digitChar] || SEG_MAP['0'];
+    const paths = SEG_PATHS.map((d, i) => `<path class="seg-vane${segs[i] ? ' on' : ''}" d="${d}"></path>`).join('');
+    return `<span class="seg-digit${isSmall ? ' seg-sm' : ''}"><svg class="seg-svg" viewBox="0 0 100 180">${paths}</svg></span>`;
+}
+function renderSevenSegment(elId, value, isSmall) {
+    const container = document.getElementById(elId);
+    const digits = String(value).split('');
+    const existing = container.querySelectorAll('.seg-digit');
+    const prevVal = prevRenderedScores[elId];
+
+    if (existing.length === digits.length) {
+        let changedDigits = 0;
+        const oldDigits = prevVal !== null && prevVal !== undefined ? String(prevVal).split('') : null;
+        digits.forEach((d, idx) => {
+            if (!oldDigits || oldDigits[idx] !== d) changedDigits++;
+            const segs = SEG_MAP[d] || SEG_MAP['0'];
+            const vanes = existing[idx].querySelectorAll('.seg-vane');
+            for (let i = 0; i < 7; i++) {
+                if (vanes[i]) vanes[i].classList.toggle('on', !!segs[i]);
+            }
+        });
+        if (!isSmall && prevVal !== null && prevVal !== undefined && changedDigits > 0) {
+            for (let k = 0; k < changedDigits; k++) {
+                setTimeout(playFlapSound, 90 + k * 30);
+            }
+        }
+    } else {
+        container.innerHTML = digits.map(d => buildSegDigitHTML(d, isSmall)).join('');
+        if (!isSmall && prevVal !== null && prevVal !== undefined) {
+            for (let k = 0; k < digits.length; k++) {
+                setTimeout(playFlapSound, 90 + k * 30);
+            }
+        }
+    }
+    if (!isSmall) prevRenderedScores[elId] = value;
+}
 function updateUI() {
-    renderSplitFlap('s1', isPenaltyMode ? penaltyScores[1] : scores[1]);
-    renderSplitFlap('s2', isPenaltyMode ? penaltyScores[2] : scores[2]);
+    const s1Val = isPenaltyMode ? penaltyScores[1] : scores[1];
+    const s2Val = isPenaltyMode ? penaltyScores[2] : scores[2];
+    if (config.viewMode === 'segment') {
+        renderSevenSegment('s1', s1Val, false);
+        renderSevenSegment('s2', s2Val, false);
+        renderSevenSegment('run-display', currentRun, true);
+        renderSevenSegment('inn-display', totalInnings, true);
+    } else {
+        renderSplitFlap('s1', s1Val);
+        renderSplitFlap('s2', s2Val);
+        document.getElementById('run-display').innerText = currentRun;
+        document.getElementById('inn-display').innerText = totalInnings;
+    }
     const penaltyBadge = document.getElementById('penalty-badge');
     if (penaltyBadge) {
         penaltyBadge.style.display = isPenaltyMode ? 'inline-block' : 'none';
         if (isPenaltyMode) penaltyBadge.innerText = penaltyRound > 1 ? `PENALTI - TUR ${penaltyRound}` : 'PENALTI';
     }
-    document.getElementById('run-display').innerText = currentRun;
-    document.getElementById('inn-display').innerText = totalInnings;
     const p1HR = getPlayerHighRuns(1);
     const p2HR = getPlayerHighRuns(2);
     document.getElementById('hr1-1').innerText = p1HR.hr1;
