@@ -82,6 +82,7 @@ function playFlapSound() {
 // Türkçe Sesli Anons Sistemi (Web Speech API)
 let trVoice = null;
 let speechUnlocked = false;
+let speakTimer = null;
 function loadTurkishVoice() {
     if (!('speechSynthesis' in window)) return;
     const voices = window.speechSynthesis.getVoices();
@@ -112,11 +113,13 @@ if ('speechSynthesis' in window) {
 function unlockSpeechEngine() {
     if (speechUnlocked) return;
     speechUnlocked = true;
-    if (audioCtx.state === 'suspended') audioCtx.resume();
+    if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
     if ('speechSynthesis' in window) {
         try {
             loadTurkishVoice();
-            const silent = new SpeechSynthesisUtterance(' ');
+            const silent = new SpeechSynthesisUtterance('');
             silent.lang = 'tr-TR';
             silent.volume = 0;
             silent.rate = 0.78;
@@ -125,11 +128,9 @@ function unlockSpeechEngine() {
             window.speechSynthesis.speak(silent);
         } catch (e) {}
     }
-    document.removeEventListener('touchstart', unlockSpeechEngine);
-    document.removeEventListener('click', unlockSpeechEngine);
 }
-document.addEventListener('touchstart', unlockSpeechEngine, false);
-document.addEventListener('click', unlockSpeechEngine, false);
+document.addEventListener('touchstart', unlockSpeechEngine, { once: true });
+document.addEventListener('click', unlockSpeechEngine, { once: true });
 
 function numberToTurkish(n) {
     const num = Math.max(0, Math.floor(n));
@@ -151,17 +152,27 @@ function numberToTurkish(n) {
 }
 function speakText(text, opts) {
     if (!('speechSynthesis' in window) || !text) return;
-    try {
-        if (!trVoice) loadTurkishVoice();
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'tr-TR';
-        utterance.volume = 1.0;
-        utterance.rate = (opts && opts.rate) ? opts.rate : 0.78;
-        utterance.pitch = (opts && opts.pitch) ? opts.pitch : 1.12;
-        if (trVoice) utterance.voice = trVoice;
-        window.speechSynthesis.speak(utterance);
-    } catch (e) {}
+    if (speakTimer) {
+        clearTimeout(speakTimer);
+        speakTimer = null;
+    }
+    speakTimer = setTimeout(() => {
+        speakTimer = null;
+        try {
+            if (!trVoice) loadTurkishVoice();
+            window.speechSynthesis.cancel();
+            if (typeof window.speechSynthesis.resume === 'function') {
+                window.speechSynthesis.resume();
+            }
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'tr-TR';
+            utterance.volume = 1.0;
+            utterance.rate = (opts && opts.rate) ? opts.rate : 0.78;
+            utterance.pitch = (opts && opts.pitch) ? opts.pitch : 1.12;
+            if (trVoice) utterance.voice = trVoice;
+            window.speechSynthesis.speak(utterance);
+        } catch (e) {}
+    }, 20);
 }
 function getRunPitch(run) {
     return Math.min(1.22, 1.12 + Math.max(0, run - 1) * 0.015);
