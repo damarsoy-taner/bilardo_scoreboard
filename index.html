@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="3-Bant Skor">
+    <link rel="manifest" href="manifest.json">
+    <title>3-Bant Bilardo Scoreboard Elite Pro V8</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="settings-overlay">
+    <h1 style="color: var(--gold); font-size: 28px; margin-bottom: 15px;">MAÇ KURULUMU</h1>
+    <div class="setup-section">
+        <div class="setup-card">
+            <div class="setup-title">OYUNCULAR</div>
+            <div class="setup-group"><span class="setup-label">BEYAZ</span><input type="text" id="name1" class="setup-input" value="BEYAZ"></div>
+            <div class="setup-group"><span class="setup-label">SARI</span><input type="text" id="name2" class="setup-input" value="SARI"></div>
+        </div>
+        <div class="setup-card">
+            <div class="setup-title">MAÇ MODU</div>
+            <div style="display: flex; gap: 5px;">
+                <div id="btn-mode-standard" class="toggle-btn active" style="flex:1" onclick="setMode('standard')">STANDART MAÇ (45 EL)</div>
+                <div id="btn-mode-handicap" class="toggle-btn" style="flex:1" onclick="setMode('handicap')">HANDİKAPLI MAÇ</div>
+            </div>
+            <div id="standard-options" style="display: flex; flex-direction: column; gap: 5px; margin-top: 5px;">
+                <span class="setup-label">HEDEF SAYI (ORTAK)</span>
+                <div style="display: flex; gap: 5px;">
+                    <div id="btn-target-30" class="toggle-btn" style="flex:1" onclick="setStandardTarget(30)">30 SAYI</div>
+                    <div id="btn-target-40" class="toggle-btn active" style="flex:1" onclick="setStandardTarget(40)">40 SAYI</div>
+                </div>
+            </div>
+            <div id="handicap-options" style="display: none; gap: 8px; margin-top: 5px;">
+                <div class="setup-group" style="flex:1"><span class="setup-label">1. OYUNCU HEDEF</span><input type="number" id="input-target-1" class="setup-input" value="40" min="1"></div>
+                <div class="setup-group" style="flex:1"><span class="setup-label">2. OYUNCU HEDEF</span><input type="number" id="input-target-2" class="setup-input" value="30" min="1"></div>
+            </div>
+        </div>
+    </div>
+    <div class="setup-section">
+        <div class="setup-card">
+            <div class="setup-title">SÜRE AYARLARI</div>
+            <div id="btn-shot-toggle" class="toggle-btn active" onclick="toggleShotActive()">SÜRE SİSTEMİ: AKTİF</div>
+            <div id="shot-settings-area" style="display: flex; gap: 8px; margin-top: 5px;">
+                <div class="setup-group" style="flex:1"><span class="setup-label">SÜRE</span><input type="number" id="input-shot-time" class="setup-input" value="30"></div>
+                <div class="setup-group" style="flex:1"><span class="setup-label">EK HAK</span><input type="number" id="input-to-count" class="setup-input" value="3"></div>
+                <div class="setup-group" style="flex:1"><span class="setup-label">UYARI SESİ (Sn)</span><input type="number" id="input-warn-time" class="setup-input" value="10"></div>
+            </div>
+        </div>
+    </div>
+    <button class="btn-start-big" onclick="startMatch()">MAÇI BAŞLAT</button>
+</div>
+
+<div id="end-match-overlay">
+    <h1 id="winner-text" style="color: var(--gold); font-size: 40px; margin: 0;">KAZANAN</h1>
+    <table class="stats-table">
+        <thead><tr><th>OYUNCU</th><th>SKOR</th><th>HR1</th><th>HR2</th><th>AVG</th></tr></thead>
+        <tbody id="end-stats-body"></tbody>
+    </table>
+    <button class="btn-start-big" onclick="location.reload()">YENİ MAÇ BAŞLAT</button>
+</div>
+
+<div class="top-info">
+    <div style="width: 30vw; text-align: center;"><div class="display-name"><span id="disp-name1">BEYAZ</span><span id="target-badge-1" class="target-badge">(40)</span></div><div id="to-dots-1" class="timeout-container"></div></div>
+    <div style="text-align: center;"><div id="penalty-badge" style="display: none; background: #ff0000; color: #ffffff; font-size: 13px; font-weight: 900; padding: 3px 12px; border-radius: 12px; letter-spacing: 1px; margin-bottom: 4px;">PENALTI</div><div id="timer-display">00:00</div></div>
+    <div style="width: 30vw; text-align: center;"><div class="display-name" style="color: var(--p2-color);"><span id="disp-name2">SARI</span><span id="target-badge-2" class="target-badge">(40)</span></div><div id="to-dots-2" class="timeout-container"></div></div>
+</div>
+
+<div class="main-stage">
+    <div class="score-card-container">
+        <div class="score-card p1-card active-turn" id="card-1">
+            <div class="touch-area area-add" onclick="handleInteraction(1, 'add')" ontouchend="handleInteraction(1, 'add')"></div>
+            <div class="score-val" id="s1">0</div>
+            <div class="touch-area area-sub" onclick="handleInteraction(1, 'sub')" ontouchend="handleInteraction(1, 'sub')"></div>
+        </div>
+        <button id="to-btn-1" class="btn-timeout" onclick="useTimeout(1)">+</button>
+    </div>
+    <div class="center-hub">
+        <div id="clock-box" class="shot-clock-wrapper">
+            <button id="shot-clock-pause-btn" onclick="togglePause()">PAUSE</button>
+            <div class="shot-clock-container" onclick="togglePause()">
+                <svg class="shot-clock-svg" width="150" height="150" viewBox="0 0 170 170">
+                    <circle class="shot-clock-bg" cx="85" cy="85" r="75"></circle>
+                    <circle id="progress-circle" class="shot-clock-progress" cx="85" cy="85" r="75" stroke-dasharray="471.2" stroke-dashoffset="0"></circle>
+                </svg>
+                <div id="shot-clock-display">30</div>
+            </div>
+        </div>
+        <div class="center-stat"><div class="center-stat-label">SERİ</div><span id="run-display" class="run-val">0</span></div>
+        <div onclick="changeTurn()" class="center-stat" style="cursor: pointer;"><span id="inn-display" class="inn-val">1</span><div class="center-stat-label">ISTAKA</div></div>
+    </div>
+    <div class="score-card-container">
+        <button id="to-btn-2" class="btn-timeout" onclick="useTimeout(2)">+</button>
+        <div class="score-card p2-card inactive-turn" id="card-2">
+            <div class="touch-area area-add" onclick="handleInteraction(2, 'add')" ontouchend="handleInteraction(2, 'add')"></div>
+            <div class="score-val" id="s2">0</div>
+            <div class="touch-area area-sub" onclick="handleInteraction(2, 'sub')" ontouchend="handleInteraction(2, 'sub')"></div>
+        </div>
+    </div>
+</div>
+
+<div class="bottom-bar">
+    <div class="stat-group">
+        <div class="stat-row-top">
+            <div class="stat-item"><span class="stat-label">HR1</span><span id="hr1-1" class="stat-val">0</span></div>
+            <div class="stat-item"><span class="stat-label">HR2</span><span id="hr1-2" class="stat-val">0</span></div>
+        </div>
+        <div class="stat-row-bottom">
+            <div class="stat-item"><span class="stat-label">AVG</span><span id="avg1" class="stat-val">0.000</span></div>
+        </div>
+    </div>
+    <div class="bottom-controls">
+        <button id="btn-undo" class="bottom-ctrl-btn" onclick="undoLastAction()" disabled>↶ GERİ AL</button>
+        <button class="bottom-ctrl-btn" onclick="resetMatch()">YENİ MAÇ</button>
+    </div>
+    <div class="stat-group">
+        <div class="stat-row-top">
+            <div class="stat-item"><span class="stat-label">HR1</span><span id="hr2-1" class="stat-val" style="color:var(--p2-color)">0</span></div>
+            <div class="stat-item"><span class="stat-label">HR2</span><span id="hr2-2" class="stat-val" style="color:var(--p2-color)">0</span></div>
+        </div>
+        <div class="stat-row-bottom">
+            <div class="stat-item"><span class="stat-label">AVG</span><span id="avg2" class="stat-val" style="color:var(--p2-color)">0.000</span></div>
+        </div>
+    </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+            navigator.serviceWorker.register('./sw.js').catch(function() {});
+        });
+    }
+</script>
+</body>
+</html>
