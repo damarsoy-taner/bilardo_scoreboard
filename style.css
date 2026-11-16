@@ -23,7 +23,7 @@ body { background-color: var(--bg-color); color: white; font-family: 'Segoe UI',
 .btn-start-big { width: 100%; max-width: 350px; padding: 18px; background: var(--btn-green); color: white; font-size: 24px; font-weight: bold; border-radius: 50px; border: none; cursor: pointer; margin: 15px 0; }
 
 /* SKORBOARD ÜST */
-.top-info { display: -webkit-flex; display: flex; -webkit-justify-content: space-around; justify-content: space-around; height: auto; -webkit-align-items: center; align-items: center; -webkit-flex-shrink: 0; flex-shrink: 0; padding: 48px 12px 0; }
+.top-info { display: -webkit-flex; display: flex; -webkit-justify-content: space-around; justify-content: space-around; height: auto; -webkit-align-items: center; align-items: center; -webkit-flex-shrink: 0; flex-shrink: 0; padding: 2.6vh 12px 0; }
 #timer-display { font-size: 46px; color: #555; font-family: 'Courier New', monospace; font-weight: bold; line-height: 1; }
 .display-name { font-size: 38px; font-weight: bold; text-transform: uppercase; display: -webkit-inline-flex; display: inline-flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; white-space: nowrap; line-height: 1; }
 .target-badge { font-family: 'Segoe UI', Arial, sans-serif; font-size: 38px; font-weight: 900; line-height: 1; margin-left: 8px; }
@@ -34,7 +34,7 @@ body { background-color: var(--bg-color); color: white; font-family: 'Segoe UI',
 /* ANA SAHNE */
 .main-stage { -webkit-flex: 1; flex: 1; min-height: 0; display: -webkit-flex; display: flex; -webkit-justify-content: space-between; justify-content: space-between; -webkit-align-items: center; align-items: center; padding: 4px 14px; }
 .score-card-container { -webkit-flex: 0 0 41%; flex: 0 0 41%; max-width: 41%; position: relative; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; }
-.score-card { -webkit-flex: 1; flex: 1; min-width: 0; height: 356px; max-height: 356px; border-radius: 32px; position: relative; display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; overflow: hidden; border: 8px solid transparent; transition: 0.4s; z-index: 10; padding: 4px 8px; }
+.score-card { -webkit-flex: 1; flex: 1; min-width: 0; height: 42vh; max-height: 356px; border-radius: 32px; position: relative; display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; overflow: hidden; border: 8px solid transparent; transition: 0.4s; z-index: 10; padding: 4px 8px; }
 .score-card::before { content: ""; position: absolute; top: 50%; left: 0; width: 100%; height: 3px; background: rgba(0, 0, 0, 0.9); z-index: 5; pointer-events: none; }
 
 .p1-card { background-color: var(--p1-color); color: black; }
@@ -96,7 +96,7 @@ body { background-color: var(--bg-color); color: white; font-family: 'Segoe UI',
 /* MEKANİK 7-SEGMENT (VANE / FLIP-SEGMENT) */
 .seg-digit { width: 156px; height: 320px; padding: 10px 8px; border-radius: 14px; position: relative; display: -webkit-inline-flex; display: inline-flex; -webkit-flex-shrink: 0; flex-shrink: 0; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; margin-right: 4px; background: #141619; border: 2px solid #26292e; box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.7); }
 .seg-digit:last-child { margin-right: 0; }
-.seg-digit.seg-sm { width: 34px; height: 58px; padding: 3px; border-radius: 6px; margin-right: 3px; border-width: 1px; }
+.seg-digit.seg-sm { width: 4.5vh; height: 7.8vh; padding: 3px; border-radius: 6px; margin-right: 3px; border-width: 1px; }
 .seg-digit.seg-sm:last-child { margin-right: 0; }
 .seg-svg { width: 100%; height: 100%; display: block; overflow: visible; }
 .seg-vane { fill: rgba(255, 255, 255, 0.06); opacity: 0.92; transform-box: fill-box; -webkit-transform-origin: center; transform-origin: center; -webkit-transform: scaleY(0.72); transform: scaleY(0.72); -webkit-transition: -webkit-transform 180ms cubic-bezier(0.4, 0, 0.2, 1), fill 180ms ease, opacity 180ms ease; transition: transform 180ms cubic-bezier(0.4, 0, 0.2, 1), fill 180ms ease, opacity 180ms ease; }
@@ -107,29 +107,29 @@ body { background-color: var(--bg-color); color: white; font-family: 'Segoe UI',
 .btn-timeout { width: 52px; height: 130px; -webkit-flex-shrink: 0; flex-shrink: 0; -webkit-align-self: center; align-self: center; background: #ff4444; border: none; border-radius: 14px; color: white; font-size: 36px; font-weight: bold; z-index: 200; cursor: pointer; margin: 0 6px; }
 
 /* ORTA PANEL */
-.center-hub { -webkit-flex: 0 0 18%; flex: 0 0 18%; width: 18%; height: 100%; display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: center; align-items: center; -webkit-justify-content: space-between; justify-content: space-between; padding: 10px 0; }
+.center-hub { -webkit-flex: 0 0 18%; flex: 0 0 18%; width: 18%; height: 100%; display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: center; align-items: center; -webkit-justify-content: space-between; justify-content: space-between; padding: 12px 0; }
 .shot-clock-wrapper { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: center; align-items: center; }
 #shot-clock-pause-btn { border-radius: 16px; border: 1px solid #444; background: rgba(30, 30, 30, 0.9); color: white; font-size: 13px; font-weight: bold; padding: 4px 14px; margin-bottom: 6px; cursor: pointer; letter-spacing: 1px; }
 .shot-clock-container { position: relative; width: 132px; height: 132px; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; cursor: pointer; }
 .shot-clock-svg { position: absolute; top: 0; left: 0; width: 132px; height: 132px; -webkit-transform: rotate(-90deg); transform: rotate(-90deg); opacity: 0.7; }
 .shot-clock-bg { fill: none; stroke: #222; stroke-width: 6; }
 .shot-clock-progress { fill: none; stroke: #00ff00; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
-#shot-clock-display { font-size: 64px; font-weight: 900; color: #00ff00; z-index: 2; line-height: 1; }
-.center-stat { text-align: center; line-height: 1.1; margin: 18px 0; }
-.center-stat-label { color: #555; font-size: 14px; font-weight: bold; }
-.run-val { font-size: 60px; color: #ffcc00; font-weight: bold; line-height: 1; }
-.inn-val { font-size: 56px; font-weight: bold; color: #fff; line-height: 1; }
+#shot-clock-display { font-size: 7.8vh; font-weight: 900; color: #00ff00; z-index: 2; line-height: 1; }
+.center-stat { text-align: center; line-height: 1; margin: 0; display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: center; align-items: center; }
+.center-stat-label { color: #666; font-size: 1.7vh; font-weight: 800; letter-spacing: 1px; line-height: 1; margin-bottom: 4px; }
+.run-val { font-size: 7.8vh; color: #ffcc00; font-weight: 900; line-height: 1; display: -webkit-inline-flex; display: inline-flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; }
+.inn-val { font-size: 7.8vh; font-weight: 900; color: #fff; line-height: 1; display: -webkit-inline-flex; display: inline-flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; }
 
 /* ALT BAR */
-.bottom-bar { height: auto; -webkit-flex-shrink: 0; flex-shrink: 0; display: -webkit-flex; display: flex; -webkit-justify-content: space-between; justify-content: space-between; padding: 0 24px 48px; -webkit-align-items: center; align-items: center; width: 100%; }
+.bottom-bar { height: auto; -webkit-flex-shrink: 0; flex-shrink: 0; display: -webkit-flex; display: flex; -webkit-justify-content: space-between; justify-content: space-between; padding: 0 24px 2.6vh; -webkit-align-items: center; align-items: center; width: 100%; }
 .stat-group { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: center; align-items: center; -webkit-justify-content: space-evenly; justify-content: space-evenly; -webkit-flex: 1; flex: 1; min-width: 0; }
-.stat-row-top { display: -webkit-flex; display: flex; -webkit-justify-content: center; justify-content: center; -webkit-align-items: baseline; align-items: baseline; line-height: 1.05; }
-.stat-row-top .stat-item { margin-right: 32px; }
+.stat-row-top { display: -webkit-flex; display: flex; -webkit-justify-content: center; justify-content: center; -webkit-align-items: center; align-items: center; line-height: 1; }
+.stat-row-top .stat-item { margin-right: 28px; }
 .stat-row-top .stat-item:last-child { margin-right: 0; }
-.stat-row-bottom { display: -webkit-flex; display: flex; -webkit-justify-content: center; justify-content: center; -webkit-align-items: baseline; align-items: baseline; margin-top: 44px; line-height: 1.05; }
-.stat-item { display: -webkit-flex; display: flex; -webkit-align-items: baseline; align-items: baseline; white-space: nowrap; }
-.stat-label { font-size: 19px; color: #555; font-weight: 800; margin-right: 5px; }
-.stat-val { font-size: 43px; font-weight: 900; }
+.stat-row-bottom { display: -webkit-flex; display: flex; -webkit-justify-content: center; justify-content: center; -webkit-align-items: center; align-items: center; margin-top: 1.8vh; line-height: 1; }
+.stat-item { display: -webkit-flex; display: flex; -webkit-flex-direction: column; flex-direction: column; -webkit-align-items: center; align-items: center; white-space: nowrap; }
+.stat-label { font-size: 1.7vh; color: #666; font-weight: 800; letter-spacing: 1px; line-height: 1; margin-bottom: 4px; }
+.stat-val { font-size: 7.8vh; font-weight: 900; line-height: 1; }
 .bottom-controls { display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center; -webkit-flex-shrink: 0; flex-shrink: 0; margin: 0 12px; }
 .bottom-ctrl-btn { background: #222; color: #888; padding: 10px 18px; font-size: 15px; font-weight: bold; border-radius: 24px; border: 1px solid #444; cursor: pointer; white-space: nowrap; margin: 0 4px; }
 .bottom-ctrl-btn:disabled { opacity: 0.35; cursor: default; }
@@ -140,27 +140,27 @@ body { background-color: var(--bg-color); color: white; font-family: 'Segoe UI',
 
 /* iPad 4 RETINA (1024x768 / 2048x1536 / 4:3) UYUMLULUK */
 @media (max-width: 1024px), (aspect-ratio: 4/3) {
-    .top-info { height: auto; padding: 54px 12px 0; }
+    .top-info { height: auto; padding: 2.6vh 12px 0; }
     #timer-display { font-size: 44px; }
     .display-name, .target-badge { font-size: 36px; }
-    .score-card { height: 328px; max-height: 328px; padding: 4px 6px; }
+    .score-card { height: 41vh; max-height: 328px; padding: 4px 6px; }
     .flap-digit { font-size: 288px; padding: 4px 6px; margin-right: 4px; }
     .seg-digit { width: 144px; height: 292px; padding: 8px 6px; margin-right: 4px; }
-    .seg-digit.seg-sm { width: 32px; height: 54px; padding: 3px; margin-right: 3px; }
+    .seg-digit.seg-sm { width: 4.5vh; height: 7.8vh; padding: 3px; margin-right: 3px; }
     .btn-timeout { width: 48px; height: 124px; font-size: 32px; margin: 0 5px; }
-    .center-hub { height: 100%; padding: 8px 0; }
-    .center-stat { margin: 18px 0; }
+    .center-hub { height: 100%; padding: 10px 0; }
+    .center-stat { margin: 0; }
     .shot-clock-container { width: 126px; height: 126px; }
     .shot-clock-svg { width: 126px; height: 126px; }
-    #shot-clock-display { font-size: 60px; }
-    .run-val { font-size: 56px; }
-    .inn-val { font-size: 52px; }
-    .bottom-bar { height: auto; padding: 0 16px 54px; }
-    .stat-row-top .stat-item { margin-right: 32px; }
+    #shot-clock-display { font-size: 7.8vh; }
+    .run-val { font-size: 7.8vh; }
+    .inn-val { font-size: 7.8vh; }
+    .bottom-bar { height: auto; padding: 0 16px 2.6vh; }
+    .stat-row-top .stat-item { margin-right: 28px; }
     .stat-row-top .stat-item:last-child { margin-right: 0; }
-    .stat-row-bottom { margin-top: 50px; }
-    .stat-label { font-size: 19px; }
-    .stat-val { font-size: 41px; }
+    .stat-row-bottom { margin-top: 1.8vh; }
+    .stat-label { font-size: 1.7vh; }
+    .stat-val { font-size: 7.8vh; }
     .bottom-ctrl-btn { padding: 8px 14px; font-size: 14px; }
 }
 
